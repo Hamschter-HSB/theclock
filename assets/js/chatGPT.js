@@ -6,10 +6,11 @@ let width, height;
 let secondsRadius, minutesRadius, hoursRadius;
 let secondBlobs = [], minuteBlobs = [], hourBlobs = [];
 
-const secondsSound = new Audio('../sound/secondsSound.mp3'); //https://pixabay.com/de/sound-effects/slow-cinematic-clock-ticking-tension-2-323078/
-const minutesSound = new Audio('../sound/minutesSound.mp3'); //https://pixabay.com/de/sound-effects/tibetan-gong-sound-effect-311179/
-const hoursSound = new Audio('../sound/hoursSound.mp3'); //https://pixabay.com/de/sound-effects/black-gong-28936/
+const secondsSound = new Audio('assets/sound/secondsSound.mp3');
+const minutesSound = new Audio('assets/sound/minutesSound.mp3');
+const hoursSound = new Audio('assets/sound/hoursSound.mp3');
 
+let soundMuted = false; // 🔇 Mute-Status
 
 function resizeCanvas() {
   const dpr = window.devicePixelRatio || 1;
@@ -108,16 +109,19 @@ function animate() {
 function updateTime() {
   const now = new Date();
 
-  if (now.getSeconds() !== 0) {
+  if (!soundMuted) {
+    if (now.getSeconds() !== 0) {
       secondsSound.currentTime = 0;
       secondsSound.play();
-  }else if (now.getMinutes() !== 0){
-    minutesSound.currentTime = 0;
-    minutesSound.play();
-}else {
-    hoursSound.currentTime = 0;
-    hoursSound.play();
-}
+    } else if (now.getMinutes() !== 0) {
+      minutesSound.currentTime = 0;
+      minutesSound.play();
+    } else {
+      hoursSound.currentTime = 0;
+      hoursSound.play();
+    }
+  }
+
   updateBlobs(secondBlobs, now.getSeconds(), secondsRadius);
   updateBlobs(minuteBlobs, now.getMinutes(), minutesRadius);
   updateBlobs(hourBlobs, now.getHours(), hoursRadius);
@@ -131,5 +135,10 @@ document.addEventListener("keydown", (e) => {
     updateTime();
     intervalId = setInterval(updateTime, 1000);
     animate();
+  }
+
+  if (e.key === "m") {
+    soundMuted = !soundMuted;
+    console.log("Sound ist jetzt", soundMuted ? "aus" : "an");
   }
 });

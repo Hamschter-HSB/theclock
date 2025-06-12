@@ -6,45 +6,35 @@ clockContext.strokeStyle = "black";
 let clockCanvasWidth = clockCanvas.width;
 let clockCanvasHeight = clockCanvas.height;
 
-const timeDisplay = document.getElementById("timeDisplay")
+const timeDisplay = document.getElementById("timeDisplay");
 
 const secondsCircleRadius = clockCanvasHeight / 2;
 const minutesCircleRadius = clockCanvasHeight / 3.5;
 const hoursCircleRadius = clockCanvasHeight / 8;
 
-const secondsSound = new Audio('../sound/secondsSound.mp3'); //https://pixabay.com/de/sound-effects/slow-cinematic-clock-ticking-tension-2-323078/
-const minutesSound = new Audio('../sound/minutesSound.mp3'); //https://pixabay.com/de/sound-effects/tibetan-gong-sound-effect-311179/
-const hoursSound = new Audio('../sound/hoursSound.mp3'); //https://pixabay.com/de/sound-effects/black-gong-28936/
+let secondsSound, minutesSound, hoursSound;
 
+let soundMuted = false;
 let intervalId = null;
 
-
-//  Uhr passt sich an Fenstergröße an / Code von ChatGPT
+// Uhr passt sich an Fenstergröße an
 function resizeCanvasToFullScreen() {
-    const dpr = window.devicePixelRatio || 1; // z. B. 2 bei Retina
+    const dpr = window.devicePixelRatio || 1;
 
-    // CSS-Größe in logischen Pixeln
     const width = window.innerWidth;
     const height = window.innerHeight;
 
-    // Setze tatsächliche Zeichenfläche auf physische Pixel
     clockCanvas.width = width * dpr;
     clockCanvas.height = height * dpr;
 
-    // Skaliere den Canvas-Inhalt runter, damit er optisch passt
     clockCanvas.style.width = width + "px";
     clockCanvas.style.height = height + "px";
 
-    // Skaliere den Zeichenkontext für scharfes Zeichnen
     clockContext.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     clockCanvasWidth = clockCanvas.width;
     clockCanvasHeight = clockCanvas.height;
 }
-
-
-
-
 
 function clearCanvas(bg = "black") {
     clockContext.fillStyle = bg;
@@ -52,18 +42,14 @@ function clearCanvas(bg = "black") {
 }
 
 function drawSeconds(currentDate) {
-
     const currentAmountOfSeconds = currentDate.getSeconds();
-    let secondX = (secondsCircleRadius * Math.cos(Math.PI / 2)) + (clockCanvasWidth / 2);
-    let secondY = -(secondsCircleRadius * Math.sin(Math.PI / 2)) + (clockCanvasHeight / 2);
+    const degreeForSpacingBlobs = (2 * Math.PI) / currentAmountOfSeconds;
 
     clockContext.fillStyle = "white";
-    let degreeForSpacingBlobs = (2 * Math.PI) / currentAmountOfSeconds;
 
     for (let i = 1; i <= currentAmountOfSeconds; i++) {
-
-        let secondX = (secondsCircleRadius * Math.cos((Math.PI / 2) + (degreeForSpacingBlobs * i))) + (clockCanvasWidth / 2);
-        let secondY = -(secondsCircleRadius * Math.sin((Math.PI / 2) + (degreeForSpacingBlobs * i))) + (clockCanvasHeight / 2);
+        const secondX = (secondsCircleRadius * Math.cos((Math.PI / 2) + (degreeForSpacingBlobs * i))) + (clockCanvasWidth / 2);
+        const secondY = -(secondsCircleRadius * Math.sin((Math.PI / 2) + (degreeForSpacingBlobs * i))) + (clockCanvasHeight / 2);
 
         clockContext.beginPath();
         clockContext.arc(secondX, secondY, 5, 0, 2 * Math.PI, true);
@@ -73,19 +59,14 @@ function drawSeconds(currentDate) {
 }
 
 function drawMinutes(currentDate) {
-
     const currentAmountOfMinutes = currentDate.getMinutes();
-
-    let minuteX = (minutesCircleRadius * Math.cos(Math.PI / 2)) + (clockCanvasWidth / 2);
-    let minuteY = -(minutesCircleRadius * Math.sin(Math.PI / 2)) + (clockCanvasHeight / 2);
+    const degreeForSpacingBlobs = (2 * Math.PI) / currentAmountOfMinutes;
 
     clockContext.fillStyle = "white";
-    let degreeForSpacingBlobs = (2 * Math.PI) / currentAmountOfMinutes;
 
     for (let i = 1; i <= currentAmountOfMinutes; i++) {
-
-        let minuteX = (minutesCircleRadius * Math.cos((Math.PI / 2) + (degreeForSpacingBlobs * i))) + (clockCanvasWidth / 2);
-        let minuteY = -(minutesCircleRadius * Math.sin((Math.PI / 2) + (degreeForSpacingBlobs * i))) + (clockCanvasHeight / 2);
+        const minuteX = (minutesCircleRadius * Math.cos((Math.PI / 2) + (degreeForSpacingBlobs * i))) + (clockCanvasWidth / 2);
+        const minuteY = -(minutesCircleRadius * Math.sin((Math.PI / 2) + (degreeForSpacingBlobs * i))) + (clockCanvasHeight / 2);
 
         clockContext.beginPath();
         clockContext.arc(minuteX, minuteY, 5, 0, 2 * Math.PI, true);
@@ -95,19 +76,14 @@ function drawMinutes(currentDate) {
 }
 
 function drawHours(currentDate) {
-
     const currentAmountOfHours = currentDate.getHours();
-
-    let hourX = (hoursCircleRadius * Math.cos(Math.PI / 2)) + (clockCanvasWidth / 2);
-    let hourY = -(hoursCircleRadius * Math.sin(Math.PI / 2)) + (clockCanvasHeight / 2);
+    const degreeForSpacingBlobs = (2 * Math.PI) / currentAmountOfHours;
 
     clockContext.fillStyle = "white";
-    let degreeForSpacingBlobs = (2 * Math.PI) / currentAmountOfHours;
 
     for (let i = 1; i <= currentAmountOfHours; i++) {
-
-        let hourX = (hoursCircleRadius * Math.cos((Math.PI / 2) + (degreeForSpacingBlobs * i))) + (clockCanvasWidth / 2);
-        let hourY = -(hoursCircleRadius * Math.sin((Math.PI / 2) + (degreeForSpacingBlobs * i))) + (clockCanvasHeight / 2);
+        const hourX = (hoursCircleRadius * Math.cos((Math.PI / 2) + (degreeForSpacingBlobs * i))) + (clockCanvasWidth / 2);
+        const hourY = -(hoursCircleRadius * Math.sin((Math.PI / 2) + (degreeForSpacingBlobs * i))) + (clockCanvasHeight / 2);
 
         clockContext.beginPath();
         clockContext.arc(hourX, hourY, 5, 0, 2 * Math.PI, true);
@@ -117,20 +93,16 @@ function drawHours(currentDate) {
 }
 
 function drawCircles() {
-
-    //Draw Seconds Circle
     clockContext.beginPath();
     clockContext.arc((clockCanvasWidth / 2), (clockCanvasHeight / 2), secondsCircleRadius, 0, 2 * Math.PI, true);
     clockContext.stroke();
     clockContext.closePath();
 
-    //Draw Minutes Circle
     clockContext.beginPath();
     clockContext.arc((clockCanvasWidth / 2), (clockCanvasHeight / 2), minutesCircleRadius, 0, 2 * Math.PI, true);
     clockContext.stroke();
     clockContext.closePath();
 
-    //Draw Hours Circle
     clockContext.beginPath();
     clockContext.arc((clockCanvasWidth / 2), (clockCanvasHeight / 2), hoursCircleRadius, 0, 2 * Math.PI, true);
     clockContext.stroke();
@@ -138,40 +110,49 @@ function drawCircles() {
 }
 
 function clockLoop() {
-    const currentDate = new Date;
-    if (currentDate.getSeconds() !== 0) {
-        secondsSound.currentTime = 0;
-        secondsSound.play();
-    }else if (currentDate.getMinutes() !== 0){
-        minutesSound.currentTime = 0;
-        minutesSound.play();
-    }else {
-        hoursSound.currentTime = 0;
-        hoursSound.play();
-    }
+    const currentDate = new Date();
+
     clearCanvas();
     drawCircles();
     drawSeconds(currentDate);
     drawMinutes(currentDate);
     drawHours(currentDate);
+
+    if (!soundMuted && secondsSound && minutesSound && hoursSound) {
+        if (currentDate.getSeconds() !== 0) {
+            secondsSound.currentTime = 0;
+            secondsSound.play();
+        } else if (currentDate.getMinutes() !== 0) {
+            minutesSound.currentTime = 0;
+            minutesSound.play();
+        } else {
+            hoursSound.currentTime = 0;
+            hoursSound.play();
+        }
+    }
+
     timeDisplay.innerHTML = "Es ist " + currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds() + " Uhr.";
 }
 
-/*  User inputs / Tastenkürzel:
-    "Enter" = beginnt das Programm und startet die Uhr
-    "w"     = färbt die Kreise weiß ein 
-    "g"     = färbt die Kreise grau ein 
-    "b"     = färbt die Kreise schwarz ein 
-*/
 window.addEventListener("resize", resizeCanvasToFullScreen);
+
 document.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
         resizeCanvasToFullScreen();
+
+        // Audio erst bei Enter initialisieren
+        if (!secondsSound) {
+            secondsSound = new Audio('assets/sound/secondsSound.mp3');
+            minutesSound = new Audio('assets/sound/minutesSound.mp3');
+            hoursSound = new Audio('assets/sound/hoursSound.mp3');
+        }
+
         clockLoop();
         if (intervalId === null) {
             intervalId = setInterval(clockLoop, 1000);
         }
     }
+
     if (event.key === "w") {
         clockContext.strokeStyle = "white";
     }
@@ -185,5 +166,8 @@ document.addEventListener("keydown", function (event) {
         timeDisplay.style.visibility =
             timeDisplay.style.visibility === 'hidden' ? 'visible' : 'hidden';
     }
-}
-);
+    if (event.key === "m") {
+        soundMuted = !soundMuted;
+        console.log("Sound: " + (soundMuted ? "aus" : "an"));
+    }
+});

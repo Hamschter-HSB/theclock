@@ -1,4 +1,4 @@
 # The Clock
 Re-Thinking about Gestaltung 2 - HSB by Hamschter-HSB
 
-<img width="1134" alt="446956595-1ce6d003-8404-408b-973d-47a2728f21e8" src="https://github.com/user-attachments/assets/0f3f5409-3ad9-4a95-801a-12c2185328e5" />
+<img width="1048" height="809" alt="Unbenannt" src="https://github.com/user-attachments/assets/3ad24e14-47e8-448b-becd-7b619e7c41df" />

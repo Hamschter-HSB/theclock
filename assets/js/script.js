@@ -1,8 +1,6 @@
 const clockCanvas = document.getElementById('clockCanvas');
 const clockContext = clockCanvas.getContext('2d');
 
-let circleColor = "gray";
-
 let clockCanvasWidth = clockCanvas.width;
 let clockCanvasHeight = clockCanvas.height;
 
@@ -18,6 +16,31 @@ const minutesSound = new Audio('assets/sound/minutesSound.mp3'); //https://pixab
 const hoursSound = new Audio('assets/sound/hoursSound.mp3'); //https://pixabay.com/de/sound-effects/black-gong-28936/
 
 let intervalId = null;
+
+// start of loading from json
+let config = { // just for initialization - use config.json
+    circleColor: "grey",
+    secColor: "grey",
+    minColor: "grey",
+    hourColor: "grey",
+    bgColor: "grey",
+
+};
+let circleColor = "grey";
+
+
+fetch('../../config.json')
+    .then(response => response.json())
+    .then(data => {
+        config = { ...config, ...data };
+        console.log("Geladene Konfiguration:", config);
+        circleColor = config.circleColor;
+        
+    })
+    .catch(error => {
+        console.error("Fehler beim Laden der Konfiguration:", error);
+    });
+// end of loading from json
 
 
 //  Uhr passt sich an Fenstergröße an
@@ -108,16 +131,16 @@ class Blob {
         let color
         switch (this.blobType) {
             case "secondBlob":
-                color = "white";
+                color = config.secColor;
                 break;
             case "minuteBlob":
-                color = "yellow";
+                color = config.minColor;
                 break;
             case "hourBlob":
-                color = "red";
+                color = config.hourColor;
                 break;
             default:
-                color = "pink";
+                color = config.circleColor;
         }
         clockContext.fillStyle = color;
         clockContext.beginPath();
@@ -235,8 +258,7 @@ document.addEventListener("keydown", function (event) {
         circleColor = "grey";
     }
     if (event.key === "Shift") {
-        timeDisplay.style.visibility =
-            timeDisplay.style.visibility === 'hidden' ? 'visible' : 'hidden';
+        timeDisplay.style.visibility === 'hidden' ? 'visible' : 'hidden';
     }
 }
 );

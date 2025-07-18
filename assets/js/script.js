@@ -33,7 +33,7 @@ fetch('../../config.json')
     .then(response => response.json())
     .then(data => {
         config = { ...config, ...data };
-        console.log("Geladene Konfiguration:", config);
+        //console.log("Geladene Konfiguration:", config);
         circleColor = config.circleColor;
         
     })

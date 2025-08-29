@@ -29,7 +29,7 @@ let config = { // just for initialization - use config.json
 let circleColor = "grey";
 
 
-fetch('/config.json')
+fetch('/theclock/config.json')
     .then(response => {
         if (!response.ok) {
             // Fallback auf lokale config wenn der erste Versuch fehlschlägt

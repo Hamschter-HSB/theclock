@@ -29,7 +29,7 @@ let config = { // just for initialization - use config.json
 let circleColor = "grey";
 
 
-fetch('../../config.json')
+fetch('https://raw.githubusercontent.com/Hamschter-HSB/theclock/refs/heads/main/config.json')
     .then(response => response.json())
     .then(data => {
         config = { ...config, ...data };

@@ -29,11 +29,16 @@ let config = { // just for initialization - use config.json
 let circleColor = "grey";
 
 
-fetch('https://raw.githubusercontent.com/Hamschter-HSB/theclock/refs/heads/main/config.json')
-    .then(response => response.json())
+fetch('/config.json')
+    .then(response => {
+        if (!response.ok) {
+            // Fallback auf lokale config wenn der erste Versuch fehlschlägt
+            return fetch('../../config.json');
+        }
+        return response.json();
+    })
     .then(data => {
         config = { ...config, ...data };
-        //console.log("Geladene Konfiguration:", config);
         circleColor = config.circleColor;
         
     })

@@ -40,10 +40,18 @@ fetch('/config.json')
     .then(data => {
         config = { ...config, ...data };
         circleColor = config.circleColor;
-        
     })
     .catch(error => {
         console.error("Fehler beim Laden der Konfiguration:", error);
+        // Optional: Fallback zu Standardwerten
+        config = {
+            secColor: "white",
+            minColor: "yellow",
+            hourColor: "red",
+            bgColor: "black",
+            circleColor: "grey"
+        };
+        circleColor = config.circleColor;
     });
 // end of loading from json
 
